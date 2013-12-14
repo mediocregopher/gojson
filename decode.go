@@ -9,7 +9,6 @@ package gojson
 
 import (
 	"encoding"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"reflect"
@@ -702,13 +701,7 @@ func (d *decodeState) literalStore(item []byte, v reflect.Value, fromQuoted bool
 				d.saveError(&UnmarshalTypeError{"string", v.Type()})
 				break
 			}
-			b := make([]byte, base64.StdEncoding.DecodedLen(len(s)))
-			n, err := base64.StdEncoding.Decode(b, s)
-			if err != nil {
-				d.saveError(err)
-				break
-			}
-			v.Set(reflect.ValueOf(b[0:n]))
+			v.Set(reflect.ValueOf(s))
 		case reflect.String:
 			v.SetString(string(s))
 		case reflect.Interface:
